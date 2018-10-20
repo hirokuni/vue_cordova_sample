@@ -9,10 +9,10 @@ And please make application with using this git repository code as sample.
 ```
 $ npm install -g @vue/cli
 $ npm install -g @vue/cli-service-global
-$ vue create my-app
+$ vue create camera-test
 
 $ npm install -g cordova # If cordova is not already installed
-$ vue cd my-app
+$ vue cd camera-test
 # cordova projectを作る
 $ vue add cordova
 # src-cordovaをcordova projectｎの作成先にした場合
@@ -25,10 +25,13 @@ $ cd ..
 ### Compiles and hot-reloads for development
 ```
 # start build and load vue application for Android
+$ cd camera-test
 
 ### Android ###
 $ npm run cordova-serve-android # Development Android
 $ npm run cordova-build-android # Build Android
+```
+```
 ### IOS ###
 $ npm run cordova-serve-ios # Development IOS
 $ npm run cordova-build-ios # Build IOS
