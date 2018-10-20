@@ -1,5 +1,8 @@
 # ds4test
 
+## Introduction
+setup with vue-cli-plugin-cordova. Just sample using the command.
+
 ## Project setup
 ```
 npm install
