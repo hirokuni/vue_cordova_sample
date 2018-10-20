@@ -1,4 +1,4 @@
-# ds4test
+# CameraTest
 
 ## Introduction
 setup with vue-cli-plugin-cordova. Just sample using the command.
