@@ -1,4 +1,4 @@
-# CameraTest
+# Vuejs and Cordova Test
 
 ## Introduction
 setup with vue-cli-plugin-cordova. Just sample using the command for Android.
