@@ -12,7 +12,7 @@ $ npm install -g @vue/cli-service-global
 $ vue create camera-test
 
 $ npm install -g cordova # If cordova is not already installed
-$ vue cd camera-test
+$ cd camera-test
 # cordova projectを作る
 $ vue add cordova
 # src-cordovaをcordova projectｎの作成先にした場合
