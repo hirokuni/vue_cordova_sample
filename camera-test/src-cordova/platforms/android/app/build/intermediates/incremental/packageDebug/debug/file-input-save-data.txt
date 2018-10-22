@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Sat Oct 20 17:58:41 JST 2018
+#Mon Oct 22 22:24:51 JST 2018
 17.baseType=DIRECTORY
 4.path=www/img/logo.82b9c7a5.png
 22.set=ASSET

@@ -14,8 +14,8 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
     </author>
-    <content src="http://192.168.0.8:8080" />
-    <allow-navigation href="http://192.168.0.8:8080" />
+    <content src="http://192.168.0.8:8081" />
+    <allow-navigation href="http://192.168.0.8:8081" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
