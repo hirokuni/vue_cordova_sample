@@ -16,6 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+let socketId = 0
+
+function string_to_buffer(src) {
+    return (new Uint16Array([].map.call(src, function(c) {
+      return c.charCodeAt(0)
+    }))).buffer;
+  }
+
 var app = {
   // Application Constructor
   initialize: function() {
@@ -37,6 +45,9 @@ var app = {
   },
 
   // Update DOM on a Received Event
+
+  
+
   receivedEvent: function(id) {
     var parentElement = document.getElementById(id);
     var listeningElement = parentElement.querySelector(".listening");
@@ -57,13 +68,37 @@ var app = {
         });
 
         console.log("start watch");
-        zeroconf.watch('_http._tcp.', 'local.', function(result) {
+        zeroconf.watch('_plum._tcp.', 'local.', function(result) {
             var action = result.action;
             var service = result.service;
             if (action == 'added') {
                 console.log('service added', service);
             } else if (action == 'resolved') {
                 console.log('service resolved', service);
+                if (service.name === 'PLUM_PU Service') {
+                    console.log('Found PLUM!!')
+
+                    //tcp ip
+                    let SocketProperties = {
+                        persistent: true
+                    }
+                    chrome.sockets.tcp.create( SocketProperties, function(createInfo) {
+                        socketId = createInfo.socketId
+
+                        chrome.sockets.tcp.connect(socketId, service.ipv4Addresses[0], 5333, function(result) {
+                            console.log("result: " + result)
+
+                            if (result >= 0) {
+                                
+                                var buffer = string_to_buffer("Hello")
+                                chrome.sockets.tcp.send(socketId, buffer, function(sendInfo){
+                                    console.log("result code: " + sendInfo.resultCode)
+                                    console.log("result bytesSent: " + sendInfo.bytesSent)
+                                })
+                            }
+                        })
+                    })
+                }
                 /* service : {
                 'domain' : 'local.',
                 'type' : '_http._tcp.',
