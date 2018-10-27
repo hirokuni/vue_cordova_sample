@@ -41,7 +41,7 @@ var app = {
     }
 
     reteTest()
-    
+
     // var listeningElement = parentElement.querySelector(".listening");
     // var receivedElement = parentElement.querySelector(".received");
 
