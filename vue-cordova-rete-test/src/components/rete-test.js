@@ -1,38 +1,36 @@
-import Rete from 'rete'
-import ConnectionPlugin from 'rete-connection-plugin'
-import VueRenderPlugin from 'rete-vue-render-plugin'
-import ContextMenuPlugin from 'rete-context-menu-plugin'
-import AreaPlugin from 'rete-area-plugin'
+import Rete from "rete";
+import ConnectionPlugin from "rete-connection-plugin";
+import VueRenderPlugin from "rete-vue-render-plugin";
+import ContextMenuPlugin from "rete-context-menu-plugin";
+import AreaPlugin from "rete-area-plugin";
 
-
-var numSocket = new Rete.Socket('Number value');
+var numSocket = new Rete.Socket("Number value");
 
 var VueNumControl = {
-  props: ['readonly', 'emitter', 'ikey', 'getData', 'putData'],
-  template: '<input type="number" :readonly="readonly" :value="value" @input="change($event)"/>',
+  props: ["readonly", "emitter", "ikey", "getData", "putData"],
+  template:
+    '<input type="number" :readonly="readonly" :value="value" @input="change($event)"/>',
   data() {
     return {
-      value: 0,
-    }
+      value: 0
+    };
   },
   methods: {
-    change(e){
+    change(e) {
       this.value = +e.target.value;
       this.update();
     },
     update() {
-      if (this.ikey)
-        this.putData(this.ikey, this.value)
-      this.emitter.trigger('process');
+      if (this.ikey) this.putData(this.ikey, this.value);
+      this.emitter.trigger("process");
     }
   },
   mounted() {
     this.value = this.getData(this.ikey);
   }
-}
+};
 
 class NumControl extends Rete.Control {
-
   constructor(emitter, key, readonly) {
     super(key);
     this.component = VueNumControl;
@@ -45,100 +43,114 @@ class NumControl extends Rete.Control {
 }
 
 class NumComponent extends Rete.Component {
+  constructor() {
+    super("Number");
+  }
 
-    constructor(){
-        super("Number");
-    }
+  builder(node) {
+    var out1 = new Rete.Output("num", "Number", numSocket);
 
-    builder(node) {
-        var out1 = new Rete.Output('num', "Number", numSocket);
+    return node.addControl(new NumControl(this.editor, "num")).addOutput(out1);
+  }
 
-        return node.addControl(new NumControl(this.editor, 'num')).addOutput(out1);
-    }
-
-    worker(node, inputs, outputs) {
-        outputs['num'] = node.data.num;
-    }
+  worker(node, inputs, outputs) {
+    outputs["num"] = node.data.num;
+  }
 }
 
 class AddComponent extends Rete.Component {
-    constructor(){
-        super("Add");
-    }
+  constructor() {
+    super("Add");
+  }
 
-    builder(node) {
-        var inp1 = new Rete.Input('num1',"Number", numSocket);
-        var inp2 = new Rete.Input('num2', "Number2", numSocket);
-        var out = new Rete.Output('num', "Number", numSocket);
+  builder(node) {
+    var inp1 = new Rete.Input("num1", "Number", numSocket);
+    var inp2 = new Rete.Input("num2", "Number2", numSocket);
+    var out = new Rete.Output("num", "Number", numSocket);
 
-        inp1.addControl(new NumControl(this.editor, 'num1'))
-        inp2.addControl(new NumControl(this.editor, 'num2'))
+    inp1.addControl(new NumControl(this.editor, "num1"));
+    inp2.addControl(new NumControl(this.editor, "num2"));
 
-        return node
-            .addInput(inp1)
-            .addInput(inp2)
-            .addControl(new NumControl(this.editor, 'preview', true))
-            .addOutput(out);
-    }
+    return node
+      .addInput(inp1)
+      .addInput(inp2)
+      .addControl(new NumControl(this.editor, "preview", true))
+      .addOutput(out);
+  }
 
-    worker(node, inputs, outputs) {
-        var n1 = inputs['num1'].length?inputs['num1'][0]:node.data.num1;
-        var n2 = inputs['num2'].length?inputs['num2'][0]:node.data.num2;
-        var sum = n1 + n2;
-        
-        this.editor.nodes.find(n => n.id == node.id).controls.get('preview').setValue(sum);
-        outputs['num'] = sum;
-    }
+  worker(node, inputs, outputs) {
+    var n1 = inputs["num1"].length ? inputs["num1"][0] : node.data.num1;
+    var n2 = inputs["num2"].length ? inputs["num2"][0] : node.data.num2;
+    var sum = n1 + n2;
+
+    this.editor.nodes
+      .find(n => n.id == node.id)
+      .controls.get("preview")
+      .setValue(sum);
+    outputs["num"] = sum;
+  }
 }
 
+var editor = null;
+var components = null;
+var engine = null;
+var container = null;
 export function reteTest() {
   (async () => {
-    var container = document.querySelector('#rete');
+    container = document.querySelector("#rete");
     //console.log("all: ", document.querySelectorAll("#rete"))
     //var container = document.getElementById('#rete');
     //var container = document.querySelectorAll("#rete")[0]
-    var components = [new NumComponent(), new AddComponent()];
+    components = [new NumComponent(), new AddComponent()];
     if (container === null || container === undefined) {
-      console.log('illegal container', container)
+      console.log("illegal container", container);
     }
-    var editor = new Rete.NodeEditor('demo@0.1.0', container);
+    editor = new Rete.NodeEditor("demo@0.1.0", container);
     editor.use(ConnectionPlugin, { curvature: 0.4 });
     editor.use(VueRenderPlugin);
     editor.use(ContextMenuPlugin);
     editor.use(AreaPlugin);
 
-    var engine = new Rete.Engine('demo@0.1.0');
-    
+    engine = new Rete.Engine("demo@0.1.0");
+
     components.map(c => {
-        editor.register(c);
-        engine.register(c);
+      editor.register(c);
+      engine.register(c);
     });
 
-    var n1 = await components[0].createNode({num: 2});
-    var n2 = await components[0].createNode({num: 0});
+    var n1 = await components[0].createNode({ num: 2 });
+    var n2 = await components[0].createNode({ num: 0 });
     var add = await components[1].createNode();
 
     n1.position = [80, 200];
     n2.position = [80, 400];
     add.position = [500, 240];
- 
 
     editor.addNode(n1);
     editor.addNode(n2);
     editor.addNode(add);
 
-    editor.connect(n1.outputs.get('num'), add.inputs.get('num1'));
-    editor.connect(n2.outputs.get('num'), add.inputs.get('num2'));
+    editor.connect(
+      n1.outputs.get("num"),
+      add.inputs.get("num1")
+    );
+    editor.connect(
+      n2.outputs.get("num"),
+      add.inputs.get("num2")
+    );
 
-
-    editor.on('process nodecreated noderemoved connectioncreated connectionremoved', async () => {
-      console.log('process');
+    editor.on(
+      "process nodecreated noderemoved connectioncreated connectionremoved",
+      async () => {
+        console.log("process");
         await engine.abort();
         await engine.process(editor.toJSON());
-    });
+        console.log("editor: ", editor.toJSON());
+      }
+    );
 
     editor.view.resize();
     AreaPlugin.zoomAt(editor);
-    editor.trigger('process');
-})();
+    editor.trigger("process");
+  })();
 }

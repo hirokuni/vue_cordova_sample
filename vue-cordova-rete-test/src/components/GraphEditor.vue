@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <div id="rete"></div>
-    Hello
+  <div style="height:100%; width:100%">
+    <div id="rete" style="height:100%; width:100%">
+    </div>
   </div>
 </template>
 
 <script>
-import {reteTest} from './rete-test.js'
+import { reteTest } from "./rete-test.js";
 
 export default {
-  name: "HelloWorld",
+  name: "GraphEditor",
   props: {
     msg: String
   }
@@ -40,7 +40,7 @@ var app = {
       console.log("null");
     }
 
-    reteTest()
+    reteTest();
 
     // var listeningElement = parentElement.querySelector(".listening");
     // var receivedElement = parentElement.querySelector(".received");
