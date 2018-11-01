@@ -49,3 +49,16 @@ cordova-build-android
 ### Lints and fixes files
 ```
 ```
+### setup
+```
+git clone git@github.com:hirokuni/vue_cordova_sample.git
+cd vue_cordova_sample
+
+# mdns-test
+$ cd mdns-test
+$ cd src-cordova
+$ npm install
+$ mkdir www
+$ cd ..
+$ npm install
+```
