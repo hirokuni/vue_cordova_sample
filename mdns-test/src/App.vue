@@ -7,13 +7,11 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import ConnectionStatus from './components/ConnectionStatus.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
-    ConnectionStatus
+    HelloWorld
   }
 }
 </script>
